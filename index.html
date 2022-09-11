@@ -4,17 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Three.js - Textured Cube</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
         <canvas id="c"></canvas>
         <script  type="importmap">{
             "imports": {
-                "three": "./js/three.module.js","GLTFLoader":"./js/GLTFLoader.js"
+              "three": "./js/three.module.js"
+              ,"GLTFLoader":"./js/GLTFLoader.js"
+                , "Controls": "./js/FirstPersonControls.js"
+                
             }
         }</script><!-- Remove this when import maps will be widely supported -->
         <script async src="./js/three.module.js"></script>
-        <script async src="./js/GLTFLoader.js"></script>
+   
   </body>
     <script type="module" src="juan.js"></script>
 </html>
