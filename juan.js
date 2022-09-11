@@ -53,7 +53,7 @@ function main() {
 
    const loader2 = new GLTFLoader();
 
-    loader2.load( './assets/untitled.glb', function ( gltf ) {    
+    loader2.load( './assets/scene.gltf', function ( gltf ) {    
       scene.add( gltf.scene );    
     },
     (xhr) => {
