@@ -83,6 +83,10 @@ function init() {
       initMusic();
       musicOn= true;  
     }
+
+    const overlay = document.getElementById( 'blocker' );
+    overlay.hide();
+
   });
 
   controls.addEventListener('lock', function () {
