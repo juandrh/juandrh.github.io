@@ -7,17 +7,26 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-        <canvas id="c"></canvas>
+    <div id="overlay">
+      <button id="startButton">Play</button>
+    </div>      
+    <canvas id="c"></canvas>
+        
+       <div id="debug">
+          <div><span id="x"></span></div>
+          <div><span id="y"></span></div>
+          <div><span id="z"></span></div>
+        </div>  
         <script  type="importmap">{
             "imports": {
               "three": "./js/three.module.js"
               ,"GLTFLoader":"./js/GLTFLoader.js"
                 , "Controls": "./js/FirstPersonControls.js"
-                
+                , "stats": "./js/stats.module.js"
             }
         }</script><!-- Remove this when import maps will be widely supported -->
         <script async src="./js/three.module.js"></script>
-   
+       
   </body>
     <script type="module" src="juan.js"></script>
 </html>

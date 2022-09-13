@@ -7,4 +7,20 @@ html, body {
     height: 100%;
     display: block;
   }
-  
+ 
+#debug {
+  position: absolute;
+  left: 1em;
+  top: 30em;
+  padding: 1em;
+  background: rgba(48, 5, 205, 0.8);
+  color: white;
+  font-family: monospace;
+}
+
+#overlay {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  color: rgba(48, 5, 205, 0.8);
+}
