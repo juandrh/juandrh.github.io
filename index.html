@@ -3,18 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Three.js - Textured Cube</title>
+    <title>First Three.js webApp</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>  
     <div id="blocker">
       <div id="instructions">
-        <p style="font-size: 36px">Click to play</p>
-        <p>
-          Move: WASD<br />
-          Jump: SPACE<br />
-          Look: MOUSE
-        </p>
+        <p style="font-size: 36px">Click to start</p>        
       </div>
     </div>
 
@@ -22,6 +17,7 @@
       {
         "imports": {
           "three": "./js/three.module.js",
+          "GLTFLoader":"./js/GLTFLoader.js",
           "Controls": "./js/PointerLockControls.js",
           "stats": "./js/stats.module.js"
         }
