@@ -78,14 +78,15 @@ function init() {
   const instructions = document.getElementById('instructions');
 
   instructions.addEventListener('click', function () {
+    const overlay = document.getElementById( 'blocker' );
     controls.lock();
     if (!musicOn){ 
       initMusic();
-      musicOn= true;  
-    }
+      musicOn= true;      
+      overlay.style.display = 'none';  
+    } else {overlay.style.display = 'block';  }
 
-    const overlay = document.getElementById( 'blocker' );
-    overlay.hide();
+   
 
   });
 
