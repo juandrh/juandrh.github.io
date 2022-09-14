@@ -258,7 +258,7 @@ function init() {
   var step=35;
   for (var i=0;i<fftSize/2 ; i++){
       const material = new THREE.MeshPhysicalMaterial(); 
-      material.color.setRGB(0,155,0);  
+      material.color.setRGB(10, 10, 10);  
       material.flatShading = false;
       material.shininess = 1; 
       material.roughness = 0.9;
