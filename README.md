@@ -1,5 +1,10 @@
 # juandrh.github.io
-Learning JavaScript and Three.js
+My first project after a week learning Javascript and Three.js.
+The snow follows the rhythm of the music.
+
+(ES)
+Mi primer proyecto tras una semana aprendiendo Javascript y Three.js.
+La nieve sigue el ritmo de la música.
 
 Assets:
 Western town Free low-poly 3D model
