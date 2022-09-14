@@ -38,8 +38,13 @@ const fftSize = 512;
 var dataArray = new Uint8Array(fftSize);
 const stats = Stats();
 
+const file = './assets/alex-productions-cinematic-epic-music-story.mp3';
+const listener = new THREE.AudioListener();
+const audio = new THREE.Audio( listener );
+const mediaElement = new Audio(file  );
+
 const loader = new GLTFLoader();
-const boxWidth = 0.5;
+const boxWidth = 0.18;
 let cube = new THREE.Mesh(); 
 let cube2 = new THREE.Mesh(); 
 const cubes = []; 
@@ -57,8 +62,8 @@ function init() {
   camera.position.y = cameraY;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0000ff);
-  scene.fog = new THREE.Fog(0x0000ff, 0, 200);
+  scene.background = new THREE.Color(0x050d4c);
+  scene.fog = new THREE.Fog(0x050d4c, 100, 350);
 
   // LIGHTS
   const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
@@ -66,10 +71,40 @@ function init() {
   //scene.add(light);
 
   
-  const light2 = new THREE.DirectionalLight(0xFFFFFF, 1);
-  light2.position.set(50, 100, 0);
-  light2.target.position.set(-50, 0, 0);
-  scene.add(light2);
+  const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
+  light2.position.set(0, 500, 400);
+  light2.target.position.set(0, 0, 0);
+  //scene.add(light2);
+
+  const light3 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  light3.position.set(30, 29, -100);
+  scene.add(light3);
+  const light4 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  light4.position.set(0, 9, 100);
+  scene.add(light4);
+  const light5 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  light5.position.set(30, 9, 0);
+  scene.add(light5);
+  const light6 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  light6.position.set(-30, 29, -100);
+  scene.add(light6);
+  const light7 = new THREE.PointLight( 0xf87205, 10, 70,2 );
+  light7.position.set(0, 29, -70);
+  scene.add(light7);
+  const light8 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  light8.position.set(-30, 9, 150);
+  scene.add(light8);
+  const light9 = new THREE.PointLight( 0xf87205, 4, 70,2 );
+  light9.position.set(0, 9, 250);
+  scene.add(light9);
+  const light10 = new THREE.PointLight( 0xf87205, 4, 70,2 );
+  light10.position.set(30, 9, 100);
+  scene.add(light10);
+  const light11 = new THREE.PointLight( 0xffffff, 10, 70,2 );
+  light11.position.set(-300, 9, 300);
+  scene.add(light11);
+
+
 
 
   controls = new PointerLockControls(camera, document.body);
@@ -82,9 +117,8 @@ function init() {
     controls.lock();
     if (!musicOn){ 
       initMusic();
-      musicOn= true;      
-      overlay.style.display = 'none';  
-    } else {overlay.style.display = 'block';  }
+      musicOn= true;  
+   } 
 
    
 
@@ -93,11 +127,16 @@ function init() {
   controls.addEventListener('lock', function () {
     instructions.style.display = 'none';
     blocker.style.display = 'none';
+    audio.play();
+    mediaElement.play();
+   
   });
 
   controls.addEventListener('unlock', function () {
     blocker.style.display = 'block';
     instructions.style.display = '';
+    audio.pause();
+    mediaElement.pause();
   });
 
   scene.add(controls.getObject());
@@ -176,7 +215,7 @@ function init() {
     // Floor color
     for (let i = 0, l = position.count/6; i < l; i++) {    
       let rand = Math.random();
-      color.setRGB(rand * 0.02 + 0.05, rand *  0.01 + 0.005,rand *  0.005 + 0.0); 
+      color.setRGB(rand * 0.05 + 0.25, rand *  0.04 + 0.115,rand *  0.015 + 0.1); 
       for (let j = 0 ; j < 6; j++) {
       colorsFloor.push(color.r, color.g, color.b);
       }
@@ -189,10 +228,15 @@ function init() {
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     scene.add(floor);
 
-  // house 1
-  loader.load( './assets/house.glb', function ( gltf ) {  
-    gltf.scene.position.z=-200; 
-    gltf.scene.position.x=-120; 
+  // town
+  loader.load( './assets/town.glb', function ( gltf ) {  
+    gltf.scene.position.z=168 //-200; 
+    gltf.scene.position.x=-50 //-120; 
+    gltf.scene.scale.x = 150;
+    gltf.scene.scale.y = 150;
+    gltf.scene.scale.z = 150;
+    gltf.scene.rotation.y = 3*Math.PI/2-0.20;
+
     scene.add( gltf.scene );    
   },
   (xhr) => {
@@ -200,72 +244,34 @@ function init() {
   },
   (error) => {console.log(error) }
   ); 
-
-   // house 2
-   loader.load( './assets/house.glb', function ( gltf ) {  
-    gltf.scene.position.z=-200; 
-    gltf.scene.position.x=120; 
-    scene.add( gltf.scene );    
-  },
-  (xhr) => {
-      console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-  },
-  (error) => {console.log(error) }
-  ); 
-
-   // house 3
-   loader.load( './assets/house.glb', function ( gltf ) {  
-    gltf.scene.position.z=-50; 
-    gltf.scene.position.x=120; 
-    scene.add( gltf.scene );    
-  },
-  (xhr) => {
-      console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-  },
-  (error) => {console.log(error) }
-  ); 
-
-  // house 4
-  loader.load( './assets/house.glb', function ( gltf ) {  
-    gltf.scene.position.z=-50; 
-    gltf.scene.position.x=-120; 
-    scene.add( gltf.scene );    
-  },
-  (xhr) => {
-      console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-  },
-  (error) => {console.log(error) }
-  ); 
-
-  //  BOXES
-
+  
+  
+  
+  //  music BOXES
  
-  const geometry = new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth);
-
-
-
-  var step=25;
+  const geometry = new THREE.BoxGeometry(2*boxWidth, boxWidth, 2*boxWidth);
+  var step=35;
   for (var i=0;i<fftSize/2 ; i++){
       const material = new THREE.MeshPhysicalMaterial(); 
       material.color.setRGB(0,155,0);  
       material.flatShading = false;
-      material.shininess = 0.1; 
+      material.shininess = 0.6; 
       material.roughness = 0.9;
       material.metalness = 0.0;
-      //material.fog = true;
+      material.fog = false;
       cube = new THREE.Mesh(geometry, material);  
       cube2 = new THREE.Mesh(geometry, material);  
       scene.add(cube);
       scene.add(cube2);
       //cube.position.x = i*boxWidth*2 - (boxWidth*fftSize/2);
 
-      cube.position.x = step-step*Math.cos(i*Math.PI*2/fftSize);
-      cube.position.y = -1;
-      cube.position.z = -step*Math.sin(i*Math.PI*2/fftSize)-120;
+      cube.position.x = step-step*Math.cos(+1.2+i*Math.PI*2/fftSize)-22;
+      cube.position.y = 50;
+      cube.position.z = -step*Math.sin(1.2+i*Math.PI*2/fftSize)-70;
       cubes.push(cube); 
-      cube2.position.x = -step+step*Math.cos(i*Math.PI*2/fftSize);
-      cube2.position.y = -1;
-      cube2.position.z = -step*Math.sin(i*Math.PI*2/fftSize)-120;
+      cube2.position.x = -step+step*Math.cos(1.2+i*Math.PI*2/fftSize)+22;
+      cube2.position.y = 50;
+      cube2.position.z = -step*Math.sin(1.2+i*Math.PI*2/fftSize)-70;
       cubes2.push(cube2);        
       materials.push(material);   
   }
@@ -295,10 +301,8 @@ function onWindowResize() {
 
 function initMusic() {
 
-  const listener = new THREE.AudioListener();
 
-  const audio = new THREE.Audio( listener );
-  const file = './assets/alex-productions-cinematic-epic-music-story.mp3';
+  
   if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
     const mloader = new THREE.AudioLoader();
     mloader.load( file, function ( buffer ) {
@@ -309,8 +313,7 @@ function initMusic() {
       
     } );
   } else {
-    const mediaElement = new Audio( file );
-    
+    //mediaElement = new Audio( file );    
     mediaElement.play();
     audio.setMediaElementSource( mediaElement );
     audio.setLoop( true );         
@@ -392,13 +395,12 @@ function animate() {
       dataArray = analyser.getFrequencyData();  
      
       //cube = new THREE.Mesh(geometry, material);
-      cube.scale.y = dataArray[i]/2;       
-      cube.position.y = dataArray[i]/64;
-      cube.material.color.setRGB( 50,dataArray[i]/256,1-dataArray[i]/256);
-      cube2.scale.y = dataArray[i]/2;       
-      cube2.position.y = dataArray[i]/64;
-      cube2.material.color.setRGB( 50,dataArray[i]/256,1-dataArray[i]/256);
-      
+      cube.scale.y = dataArray[i];       
+      cube.position.y = dataArray[i]/5.0;      
+      cube2.scale.y = dataArray[i];       
+      cube2.position.y = dataArray[i]/5.0;   
+     // cube2.material.color.setRGB( 0.0,dataArray[i]/512+0.5,1.0-dataArray[i]/512);
+      cube.material.color.setRGB( dataArray[i]/1028+0.75,dataArray[i]/512+0.50,0.0);
       
       }
       
