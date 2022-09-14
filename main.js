@@ -54,7 +54,7 @@ const cubes2 = [];
 var yArray = new Float32Array(fftSize);
 var yArray2 = new Float32Array(fftSize);  
 const materials = [];  
-const colorLights = 0x77bbf7  // 0xf87205;
+const colorLights = 0x497296  // 0xf87205;
 
 init();
 animate();
@@ -67,8 +67,8 @@ function init() {
   camera.position.y = cameraY;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x203040);  // 0x050d4c
-  scene.fog = new THREE.Fog(0x203040, 0.1, 300);
+  scene.background = new THREE.Color(0x121a23);  // 0x050d4c
+  scene.fog = new THREE.Fog(0x121a23, 0.1, 300);
 
   // LIGHTS
 
