@@ -34,8 +34,9 @@ const clock = new THREE.Clock();
 
 let musicOn = false;  
 let  analyser, uniforms; 
-const fftSize = 512;
+const fftSize = 2048;
 var dataArray = new Uint8Array(fftSize);
+
 const stats = Stats();
 
 const file = './assets/alex-productions-cinematic-epic-music-story.mp3';
@@ -45,12 +46,15 @@ let listener = new THREE.AudioListener();
 let audio = new THREE.Audio( listener );
 
 const loader = new GLTFLoader();
-const boxWidth = 0.18;
+const boxWidth = 0.05;
 let cube = new THREE.Mesh(); 
 let cube2 = new THREE.Mesh(); 
 const cubes = []; 
-const cubes2 = [];    
+const cubes2 = [];  
+var yArray = new Float32Array(fftSize);
+var yArray2 = new Float32Array(fftSize);  
 const materials = [];  
+const colorLights = 0x77bbf7  // 0xf87205;
 
 init();
 animate();
@@ -63,49 +67,47 @@ function init() {
   camera.position.y = cameraY;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x050d4c);
-  scene.fog = new THREE.Fog(0x050d4c, 100, 350);
+  scene.background = new THREE.Color(0x203040);  // 0x050d4c
+  scene.fog = new THREE.Fog(0x203040, 0.1, 300);
 
   // LIGHTS
-  const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
-  light.position.set(0.5, 1, 0.75);
-  //scene.add(light);
 
-  
-  const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
-  light2.position.set(0, 500, 400);
-  light2.target.position.set(0, 0, 0);
-  //scene.add(light2);
-
-  const light3 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  const light3 = new THREE.PointLight( colorLights, 15, 70,2 );
   light3.position.set(30, 29, -100);
   scene.add(light3);
-  const light4 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  const light4 = new THREE.PointLight( colorLights, 5, 70,2 );
   light4.position.set(0, 9, 100);
   scene.add(light4);
-  const light5 = new THREE.PointLight( 0xf87205, 5, 70,2 );
-  light5.position.set(30, 9, 0);
+  const light5 = new THREE.PointLight( colorLights, 5, 70,2 );
+  light5.position.set(30, 29, 0);
   scene.add(light5);
-  const light6 = new THREE.PointLight( 0xf87205, 5, 70,2 );
-  light6.position.set(-30, 29, -100);
+  const light6 = new THREE.PointLight( colorLights, 10, 70,2 );
+  light6.position.set(-30, 59, -100);
   scene.add(light6);
-  const light7 = new THREE.PointLight( 0xf87205, 10, 70,2 );
+  const light7 = new THREE.PointLight( colorLights, 10, 70,2 );
   light7.position.set(0, 29, -70);
   scene.add(light7);
-  const light8 = new THREE.PointLight( 0xf87205, 5, 70,2 );
+  const light8 = new THREE.PointLight(colorLights, 5, 70,2 );
   light8.position.set(-30, 9, 150);
   scene.add(light8);
-  const light9 = new THREE.PointLight( 0xf87205, 4, 70,2 );
+  const light9 = new THREE.PointLight( colorLights, 4, 70,2 );
   light9.position.set(0, 9, 250);
   scene.add(light9);
-  const light10 = new THREE.PointLight( 0xf87205, 4, 70,2 );
+  const light10 = new THREE.PointLight( colorLights, 4, 70,2 );
   light10.position.set(30, 9, 100);
   scene.add(light10);
   const light11 = new THREE.PointLight( 0xffffff, 10, 70,2 );
   light11.position.set(-300, 9, 300);
   scene.add(light11);
-
-
+  const light12 = new THREE.PointLight( colorLights, 2, 70,2 );
+  light12.position.set(-20, 10, 25);
+  scene.add(light12);
+  const light13 = new THREE.PointLight( colorLights, 6, 70,2 );
+  light13.position.set(-230, 12, -105);
+  scene.add(light13);
+  const light14 = new THREE.PointLight( colorLights, 4, 70,2 );
+  light14.position.set(-230, 9, -175);
+  scene.add(light14);
 
 
   controls = new PointerLockControls(camera, document.body);
@@ -120,8 +122,7 @@ function init() {
       initMusic();
       musicOn= true;  
    } 
-
-   
+  
 
   });
 
@@ -219,7 +220,7 @@ function init() {
     // Floor color
     for (let i = 0, l = position.count/6; i < l; i++) {    
       let rand = Math.random();
-      color.setRGB(rand * 0.05 + 0.25, rand *  0.04 + 0.115,rand *  0.015 + 0.1); 
+      color.setRGB(rand * 0.02 + 0.25, rand *  0.02 + 0.115, rand *  0.015 + 0.05); 
       for (let j = 0 ; j < 6; j++) {
       colorsFloor.push(color.r, color.g, color.b);
       }
@@ -251,33 +252,47 @@ function init() {
   
   
   
-  //  music BOXES
- 
-  const geometry = new THREE.BoxGeometry(2*boxWidth, boxWidth, 2*boxWidth);
+  // snow
+  const geometry = new THREE.SphereGeometry( boxWidth, 16, 16 );
+  //const geometry = new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth);
   var step=35;
   for (var i=0;i<fftSize/2 ; i++){
       const material = new THREE.MeshPhysicalMaterial(); 
       material.color.setRGB(0,155,0);  
       material.flatShading = false;
-      material.shininess = 0.6; 
+      material.shininess = 1; 
       material.roughness = 0.9;
-      material.metalness = 0.0;
-      material.fog = false;
+      material.metalness = 0.0;      
+      materials.push(material); 
       cube = new THREE.Mesh(geometry, material);  
       cube2 = new THREE.Mesh(geometry, material);  
       scene.add(cube);
       scene.add(cube2);
-      //cube.position.x = i*boxWidth*2 - (boxWidth*fftSize/2);
+     
+      cube.position.x = Math.random()*200-100;        
+      yArray[i]= Math.random()*150; 
+      cube.position.y = yArray[i];
+      cube.position.z = Math.random()*600-250;
+      cubes.push(cube); 
 
-      cube.position.x = step-step*Math.cos(+1.2+i*Math.PI*2/fftSize)-22;
+      cube2.position.x = Math.random()*200-100;
+      yArray2[i]= Math.random()*150; 
+      cube2.position.y = yArray2[i];
+      cube2.position.y = Math.random()*100;
+      cube2.position.z =Math.random()*600-250;
+      cubes2.push(cube2); 
+
+   /*    cube.position.x = step-step*Math.cos(+1.2+i*Math.PI*2/fftSize)-22;
       cube.position.y = 50;
       cube.position.z = -step*Math.sin(1.2+i*Math.PI*2/fftSize)-70;
       cubes.push(cube); 
       cube2.position.x = -step+step*Math.cos(1.2+i*Math.PI*2/fftSize)+22;
       cube2.position.y = 50;
       cube2.position.z = -step*Math.sin(1.2+i*Math.PI*2/fftSize)-70;
-      cubes2.push(cube2);        
-      materials.push(material);   
+      cubes2.push(cube2); */        
+
+
+        
   }
 
 
@@ -389,21 +404,33 @@ function animate() {
   for (var i=0;i<fftSize/2 ; i++){ 
     cube = cubes[i];
     cube2 = cubes2[i];
-    const speed = .2 + i * .1;
-    const rot = time * speed;
+    //const speed = .2 + i * .1;
+    //const rot = time * speed;
     //cube.rotation.x = rot;
      //cube.rotation.y = rot;
     /*  cube.position.x = step*Math.cos(i*Math.PI*4/fftSize);
     cube.position.z = step*Math.sin(i*Math.PI*4/fftSize); */
-   
+    const snowScale = 2**(dataArray[i]/50);
+
      if(musicOn){
-      dataArray = analyser.getFrequencyData();   
-      cube.scale.y = dataArray[i];       
-      cube.position.y = dataArray[i]/8.0;      
-      cube2.scale.y = dataArray[i];       
-      cube2.position.y = dataArray[i]/8.0;   
-     
-      cube.material.color.setRGB( dataArray[i]/1028+0.75,dataArray[i]/512+0.50,0.0);
+      if(yArray[i]<0){
+        yArray[i]=150;
+      }  else {yArray[i]=yArray[i]-0.2;}
+      if(yArray2[i]<0){
+        yArray2[i]=150;
+      }  else {yArray2[i]=yArray2[i]-0.3;}
+      dataArray = analyser.getFrequencyData();  
+      cube.scale.x = snowScale; 
+      cube.scale.y = snowScale; 
+      cube.scale.z = snowScale; 
+      cube.position.y = yArray[i];   
+
+      cube2.scale.x = snowScale;    
+      cube2.scale.y = snowScale; 
+      cube2.scale.z = snowScale; 
+      cube2.position.y = yArray2[i];   
+      let snowInt = dataArray[i]/1200+0.79;
+      cube.material.color.setRGB( snowInt,snowInt,snowInt);
       
       }
       
