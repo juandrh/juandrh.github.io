@@ -39,9 +39,10 @@ var dataArray = new Uint8Array(fftSize);
 const stats = Stats();
 
 const file = './assets/alex-productions-cinematic-epic-music-story.mp3';
-const listener = new THREE.AudioListener();
-const audio = new THREE.Audio( listener );
-const mediaElement = new Audio(file  );
+//const audioCtx = new (window.AudioContext || window.webkitAudioContext)();	  
+let mediaElement = new Audio( file );  
+let listener = new THREE.AudioListener();
+let audio = new THREE.Audio( listener );
 
 const loader = new GLTFLoader();
 const boxWidth = 0.18;
@@ -127,16 +128,19 @@ function init() {
   controls.addEventListener('lock', function () {
     instructions.style.display = 'none';
     blocker.style.display = 'none';
-    audio.play();
-    mediaElement.play();
+
+
+      audio.play();
+    mediaElement.play();  
    
   });
 
   controls.addEventListener('unlock', function () {
     blocker.style.display = 'block';
     instructions.style.display = '';
-    audio.pause();
-    mediaElement.pause();
+    
+     audio.pause();
+    mediaElement.pause(); 
   });
 
   scene.add(controls.getObject());
@@ -301,8 +305,9 @@ function onWindowResize() {
 
 function initMusic() {
 
-
-  
+ const listener = new THREE.AudioListener();
+  const audio = new THREE.Audio( listener );
+ 
   if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
     const mloader = new THREE.AudioLoader();
     mloader.load( file, function ( buffer ) {
@@ -313,7 +318,7 @@ function initMusic() {
       
     } );
   } else {
-    //mediaElement = new Audio( file );    
+    mediaElement = new Audio( file );    
     mediaElement.play();
     audio.setMediaElementSource( mediaElement );
     audio.setLoop( true );         
@@ -324,7 +329,7 @@ function initMusic() {
   const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
   uniforms = {
     tAudioData: { value: new THREE.DataTexture( analyser.data, fftSize /2 , 1, format ) }
-  };        
+  };       
    
 }
 
@@ -386,20 +391,18 @@ function animate() {
     cube2 = cubes2[i];
     const speed = .2 + i * .1;
     const rot = time * speed;
-  //  cube.rotation.x = rot;
+    //cube.rotation.x = rot;
      //cube.rotation.y = rot;
     /*  cube.position.x = step*Math.cos(i*Math.PI*4/fftSize);
     cube.position.z = step*Math.sin(i*Math.PI*4/fftSize); */
    
      if(musicOn){
-      dataArray = analyser.getFrequencyData();  
-     
-      //cube = new THREE.Mesh(geometry, material);
+      dataArray = analyser.getFrequencyData();   
       cube.scale.y = dataArray[i];       
-      cube.position.y = dataArray[i]/5.0;      
+      cube.position.y = dataArray[i]/8.0;      
       cube2.scale.y = dataArray[i];       
-      cube2.position.y = dataArray[i]/5.0;   
-     // cube2.material.color.setRGB( 0.0,dataArray[i]/512+0.5,1.0-dataArray[i]/512);
+      cube2.position.y = dataArray[i]/8.0;   
+     
       cube.material.color.setRGB( dataArray[i]/1028+0.75,dataArray[i]/512+0.50,0.0);
       
       }
