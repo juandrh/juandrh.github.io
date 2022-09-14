@@ -272,7 +272,7 @@ function init() {
       cube.position.x = Math.random()*200-100;        
       yArray[i]= Math.random()*150; 
       cube.position.y = yArray[i];
-      cube.position.z = Math.random()*600-250;
+      cube.position.z = -Math.random()*150+20;
       cubes.push(cube); 
 
       cube2.position.x = Math.random()*200-100;
